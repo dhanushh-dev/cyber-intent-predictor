@@ -1,2 +1,6 @@
-# Vercel Serverless Requirements
-# Flask is no longer required as we use http.server handlers
+flask
+gunicorn
+scikit-learn
+pandas
+numpy
+joblib
