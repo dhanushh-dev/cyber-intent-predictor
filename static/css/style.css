@@ -83,7 +83,7 @@ body {
 }
 
 .email-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255,255,255,0.03);
     margin-bottom: 15px;
     padding: 25px;
     border-radius: 15px;
@@ -92,7 +92,7 @@ body {
     transition: 0.3s;
 }
 
-.email-card:hover { border-color: var(--primary); transform: translateX(10px); background: rgba(59, 130, 246, 0.05); box-shadow: 0 0 20px rgba(59, 130, 246, 0.1); }
+.email-card:hover { border-color: var(--primary); transform: translateX(10px); background: rgba(59, 130, 246, 0.05); box-shadow: 0 0 20px rgba(59,130,246,0.1); }
 .card-meta { display: flex; justify-content: space-between; margin-bottom: 10px; }
 .status-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; font-weight: 700; }
 .badge-alert { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
@@ -146,7 +146,7 @@ textarea { height: 120px; resize: none; }
 
 .insights-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .insight-block h4 { color: var(--primary); margin-bottom: 12px; text-transform: uppercase; font-size: 0.8rem; }
-.insight-block p { color: var(--text); line-height: 1.6; font-size: 0.95rem; background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 12px; border-left: 2px solid var(--primary); }
+.insight-block p { color: var(--text); line-height: 1.6; font-size: 0.95rem; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border-left: 2px solid var(--primary); }
 
 .speak-tiny { background: transparent; border: 1px solid var(--muted); color: var(--muted); padding: 5px 12px; border-radius: 6px; cursor: pointer; margin-top: 15px; }
 
@@ -160,5 +160,35 @@ textarea { height: 120px; resize: none; }
 .high-glow { box-shadow: 0 0 40px rgba(239, 68, 68, 0.3); border-color: var(--danger) !important; animation: redPulse 2s infinite; }
 @keyframes redPulse { 50% { border-color: transparent; } }
 
-/* FOOTER CLEANED */
+/* FOOTER */
 .flow-footer { text-align: center; padding-top: 40px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+.network-info {
+    margin-bottom: 20px;
+    background: rgba(59, 130, 246, 0.05);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+}
+
+.network-info code {
+    color: var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+}
+
+.copy-small {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.copy-small:hover { background: var(--secondary); }
