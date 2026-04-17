@@ -1,10 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // API Configuration - REPLACE THIS with your Render URL after deployment
+    // Example: const API_BASE_URL = 'https://cyber-predictor-backend.onrender.com';
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://127.0.0.1:5000' 
+        : ''; // Vercel will use relative paths by default, which we rewrite in vercel.json if using serverless. 
+              // But since we are moving to Render, we should eventually hardcode the Render URL here.
+
     // Step Containers
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
-    const step3 = document.getElementById('step3'); // config section
-    const step4 = document.getElementById('step4'); // loader
-    const step5 = document.getElementById('step5'); // results
+    const step3 = document.getElementById('step3');
+    const step4 = document.getElementById('step4');
+    const step5 = document.getElementById('step5');
 
     // Controls
     const fetchEmailsBtn = document.getElementById('fetchEmailsBtn');
@@ -39,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchEmailsBtn.disabled = true;
 
         try {
-            const response = await fetch('/fetch_emails');
-            const emails = await response.json();
+            const response = await fetch(`${API_BASE_URL}/fetch_emails`);
+            if (!response.ok) throw new Error("Email fetch failed. Check server or credentials.");
             
+            const emails = await response.json();
             if (emails.error) throw new Error(emails.error);
 
             renderEmails(emails);
             
-            // Transition Step
             step1.classList.add('hidden');
             setTimeout(() => {
                 step1.style.display = 'none';
@@ -56,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Fetch Error:', error);
-            alert('Failed to establish connection with Gmail. Verify App Password.');
+            alert(error.message || 'Failed to establish connection with Gmail.');
             fetchEmailsBtn.innerText = 'Fetch Security Emails';
             fetchEmailsBtn.disabled = false;
         }
@@ -82,19 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             card.addEventListener('click', () => {
-                // Select and Auto-Fill
                 const senderEmail = email.sender.match(/<(.+)>/)?.[1] || email.sender;
                 usernameInput.value = senderEmail;
                 actionsInput.value = `Subject: ${email.subject}\n\n${email.body}`;
                 
-                // STEP 2 -> STEP 3: Expand Config
                 step3.classList.remove('collapsed-section');
                 step3.classList.add('expanded-section');
-                
-                // Smooth scroll to config
                 step3.scrollIntoView({ behavior: 'smooth' });
                 
-                // Highlight config header
                 const badge = step3.querySelector('.status-badge');
                 badge.innerText = 'DATA INJECTED';
                 badge.style.background = 'var(--success)';
@@ -104,9 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // STEP 3 -> STEP 4 -> STEP 5: Analyze and Show Results
     analyzeBtn.addEventListener('click', async () => {
-        // Transition to Loader
         step3.classList.add('hidden');
         step4.classList.remove('hidden');
         step4.classList.add('visible');
@@ -120,15 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/predict_intent', {
+            const response = await fetch(`${API_BASE_URL}/predict_intent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
+            if (!response.ok) throw new Error("Analysis engine failed.");
             const data = await response.json();
 
-            // Populate Results
             resUser.textContent = data.user;
             resIntent.textContent = data.intent;
             resConfidence.textContent = `${data.confidence}%`;
@@ -136,8 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resSuggestion.textContent = data.suggestion;
             resRisk.textContent = data.risk_level;
 
-            // Apply Risk Styling
-            resultCard.className = 'card result-summary'; // Reset
+            resultCard.className = 'card result-summary';
             resRisk.className = 'risk-pill';
             if (data.risk_level === 'High') {
                 resultCard.classList.add('high-glow');
@@ -148,34 +147,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 resRisk.style.color = 'var(--success)';
             }
 
-            // Initialization Dashboard if first time
             if (!riskChart) {
                 await initDashboard(data);
             } else {
                  await updateDashboard();
             }
 
-            // Transition To Results
             setTimeout(() => {
                 step4.classList.add('hidden');
                 step5.classList.remove('hidden');
                 step5.classList.add('visible');
                 step5.scrollIntoView({ behavior: 'smooth' });
                 speakIntel(data);
-            }, 2000); // 2 second fake "AI processing" time for UX
+            }, 2000);
 
         } catch (error) {
             console.error('Analysis Fault:', error);
-            alert('Analysis Engine Timeout.');
+            alert(error.message || 'Analysis Engine Timeout.');
             step4.classList.add('hidden');
             step3.classList.remove('hidden');
         }
     });
 
     function speakIntel(data) {
-        const msg = new SpeechSynthesisUtterance(`Intel confirmed for ${data.user}. Risk level: ${data.risk_level}. Intent: ${data.intent}. ${data.explanation} Recommendation: ${data.suggestion}`);
-        msg.rate = 1;
-        msg.pitch = 0.85;
+        const msg = new SpeechSynthesisUtterance(`Intel confirmed for ${data.user}. Risk level: ${data.risk_level}. Intent: ${data.intent}. Recommendation: ${data.suggestion}`);
+        msg.rate = 1; msg.pitch = 0.85;
         window.speechSynthesis.speak(msg);
     }
 
@@ -184,52 +180,55 @@ document.addEventListener('DOMContentLoaded', () => {
             user: resUser.textContent,
             risk_level: resRisk.textContent,
             intent: resIntent.textContent,
-            explanation: resExplanation.textContent,
             suggestion: resSuggestion.textContent
         });
     });
 
     async function initDashboard() {
-        const res = await fetch('/analytics');
-        const data = await res.json();
+        try {
+            const res = await fetch(`${API_BASE_URL}/analytics`);
+            const data = await res.json();
 
-        const ctxRisk = document.getElementById('riskChart').getContext('2d');
-        riskChart = new Chart(ctxRisk, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(data.risk_distribution),
-                datasets: [{ data: Object.values(data.risk_distribution), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 10 }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
-        });
+            const ctxRisk = document.getElementById('riskChart').getContext('2d');
+            riskChart = new Chart(ctxRisk, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data.risk_distribution),
+                    datasets: [{ data: Object.values(data.risk_distribution), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 10 }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
+            });
 
-        const ctxIntent = document.getElementById('intentChart').getContext('2d');
-        intentChart = new Chart(ctxIntent, {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(data.intent_categories),
-                datasets: [{ data: Object.values(data.intent_categories), backgroundColor: ['#3b82f6', '#8b5cf6', '#ef4444', '#10b981'], borderWidth: 0 }]
-            },
-            options: { plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 10 } } } }
-        });
+            const ctxIntent = document.getElementById('intentChart').getContext('2d');
+            intentChart = new Chart(ctxIntent, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data.intent_categories),
+                    datasets: [{ data: Object.values(data.intent_categories), backgroundColor: ['#3b82f6', '#8b5cf6', '#ef4444', '#10b981'], borderWidth: 0 }]
+                },
+                options: { plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 10 } } } }
+            });
 
-        const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
-        timelineChart = new Chart(ctxTimeline, {
-            type: 'line',
-            data: {
-                labels: ['01', '02', '03', '04', '05', '06', '07'],
-                datasets: [{ data: data.timeline, borderColor: '#3b82f6', tension: 0.4, fill: false }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
-        });
+            const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
+            timelineChart = new Chart(ctxTimeline, {
+                type: 'line',
+                data: {
+                    labels: ['01', '02', '03', '04', '05', '06', '07'],
+                    datasets: [{ data: data.timeline, borderColor: '#3b82f6', tension: 0.4, fill: false }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
+            });
+        } catch (e) { console.error("Dashboard Dashboard Error", e); }
     }
 
     async function updateDashboard() {
-        const res = await fetch('/analytics');
-        const data = await res.json();
-        riskChart.data.datasets[0].data = Object.values(data.risk_distribution);
-        intentChart.data.datasets[0].data = Object.values(data.intent_categories);
-        riskChart.update();
-        intentChart.update();
+        try {
+            const res = await fetch(`${API_BASE_URL}/analytics`);
+            const data = await res.json();
+            riskChart.data.datasets[0].data = Object.values(data.risk_distribution);
+            intentChart.data.datasets[0].data = Object.values(data.intent_categories);
+            riskChart.update();
+            intentChart.update();
+        } catch (e) { console.error("Dashboard Update Error", e); }
     }
 });
