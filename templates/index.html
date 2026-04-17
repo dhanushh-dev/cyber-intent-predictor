@@ -3,41 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Cyber Threat Analyzer | Professional Dashboard</title>
+    <title>AI Cyber Threat Analyzer | Intelligence Center</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Outfit:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="cyber-theme">
-    <div class="container">
-        <header>
+    <div class="main-wrapper">
+        <header class="main-header">
             <h1 class="glitch-text">AI Cyber Threat <span class="accent">Analyzer</span></h1>
-            <p class="subtitle">Real-time behavior analysis and intent prediction</p>
+            <p class="subtitle">Next-Gen Predictive Intelligence Dashboard</p>
         </header>
 
-        <section class="main-layout">
-            <!-- LEFT COLUMN: Control Panel & Intelligence Feed -->
-            <div class="left-col">
-                <div class="card terminal-card">
-                    <button id="fetchEmailsBtn" class="hero-btn">📥 Fetch Security Emails</button>
-                    
-                    <div class="section-divider">
-                        <span>Intelligence Feed</span>
-                    </div>
-                    
-                    <div id="emailList" class="email-list-container scroll-style">
-                        <p class="placeholder-small">Click "Fetch" to load security alerts...</p>
-                    </div>
-                </div>
+        <!-- STEP 1: PRIMARY ACTION -->
+        <section class="step-section center-aligned" id="step1">
+            <button id="fetchEmailsBtn" class="hero-fetch-btn">📥 Fetch Security Emails</button>
+        </section>
 
-                <div class="card form-card">
-                    <h2>⚙️ Manual Configuration</h2>
+        <!-- STEP 2: EMAIL FOCUS FEED -->
+        <section class="step-section hidden animate-in" id="step2">
+            <div class="container">
+                <div class="intelligence-header">
+                    <h2>Fetched Threat Intelligence</h2>
+                    <p>Select an alert to initiate deep analysis protocol</p>
+                </div>
+                <div id="emailList" class="email-grid-focus">
+                    <!-- Email Cards Inserted Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 3: SMART CONFIGURATION -->
+        <section class="step-section collapsed" id="step3">
+            <div class="container narrow">
+                <div class="card terminal-form">
+                    <div class="form-header">
+                        <h3>⚙️ Configuration Protocol</h3>
+                        <p>Verify intelligence data before final analysis</p>
+                    </div>
                     <div class="vertical-form">
                         <div class="input-group">
-                            <label>Username / Session ID</label>
-                            <input type="text" id="username" placeholder="e.g. system_root">
+                            <label>Target Identity / Session</label>
+                            <input type="text" id="username" placeholder="Awaiting selection...">
                         </div>
-                        <div class="input-row">
+                        <div class="form-row">
                             <div class="input-group">
                                 <label>Login Attempts</label>
                                 <input type="number" id="loginAttempts" value="0">
@@ -48,101 +57,110 @@
                             </div>
                         </div>
                         <div class="input-group">
-                            <label>Suspicious Actions</label>
-                            <textarea id="actions" placeholder="System logs, network packets, filtered keywords..."></textarea>
+                            <label>Threat Content / Activity</label>
+                            <textarea id="actions" placeholder="Email body content will populate here..."></textarea>
                         </div>
                         <div class="input-group">
-                            <label>Time of Activity</label>
+                            <label>Activity Window</label>
                             <select id="timeOfDay">
-                                <option value="Day">Standard Ops (Day)</option>
-                                <option value="Night">Unusual Hours (Night)</option>
-                                <option value="Early Morning">Early Warning (Dawn)</option>
+                                <option value="Day">Standard Operations (Day)</option>
+                                <option value="Night">Suspicious Window (Night)</option>
+                                <option value="Early Morning">First Light (Dawn)</option>
                             </select>
                         </div>
-                        <button id="analyzeBtn" class="primary-btn">🔍 Run Threat Analysis</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT COLUMN: Real-time Analysis & Insights -->
-            <div class="right-col" id="analysisTarget">
-                <div class="card result-card" id="resultCard">
-                    <div id="loader" class="hidden">
-                        <div class="cyber-loader">
-                            <div class="ring"></div>
-                            <span>ANALYZING...</span>
-                        </div>
-                    </div>
-
-                    <div id="placeholderText">
-                        <div class="security-shield">🛡️</div>
-                        <p>Awaiting Intelligence Data...</p>
-                    </div>
-
-                    <div id="resultContent" class="hidden animate-in">
-                        <div class="risk-indicator" id="riskIndicator"></div>
-                        <div class="res-header">
-                            <div class="node">
-                                <span class="label">Target Node</span>
-                                <span id="resUser" class="value">--</span>
-                            </div>
-                            <div class="node">
-                                <span class="label">Detected Intent</span>
-                                <span id="resIntent" class="value">--</span>
-                            </div>
-                        </div>
-
-                        <div class="metrics-grid">
-                            <div class="metric">
-                                <span class="label">🔥 Threat Level</span>
-                                <span id="resRisk" class="level-badge">--</span>
-                            </div>
-                            <div class="metric">
-                                <span class="label">📊 AI Confidence</span>
-                                <span id="resConfidence" class="value-large">0%</span>
-                            </div>
-                        </div>
-
-                        <div class="intelligence-box">
-                            <h3>🧠 Intelligence Explanation</h3>
-                            <p id="resExplanation">--</p>
-                        </div>
-
-                        <div class="protocol-box">
-                            <h3>📜 Suggested Protocol</h3>
-                            <p id="resSuggestion">--</p>
-                        </div>
-
-                        <div class="actions-row">
-                            <button id="speakBtn" class="voice-btn">🔊 Listen to Intel</button>
+                        <div class="center-btn">
+                            <button id="analyzeBtn" class="analyze-trigger-btn">🔍 Run Threat Analysis</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- DASHBOARD: Global Analytics -->
-        <section class="dashboard-area card">
-            <h2>📊 Strategic Analytics Dashboard</h2>
-            <div class="dashboard-grid">
-                <div class="chart-box">
-                    <h3>Risk Distribution</h3>
-                    <canvas id="riskChart"></canvas>
+        <!-- STEP 4: ANALYSIS EXPERIENCE -->
+        <section class="step-section hidden" id="step4">
+            <div class="analysis-experience">
+                <div class="shield-container">
+                    <div class="shield-icon">🛡️</div>
+                    <div class="scanning-bar"></div>
                 </div>
-                <div class="chart-box">
-                    <h3>Threat Categories</h3>
-                    <canvas id="intentChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <h3>Attack Frequency</h3>
-                    <canvas id="timelineChart"></canvas>
+                <h2 class="analyzing-text">Analyzing Threat Intelligence<span class="dots">...</span></h2>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
             </div>
         </section>
 
-        <footer>
-            <div class="footer-status">
-                <span class="status-dot online"></span> SYSTEM STATUS: ONLINE | ENCRYPTION: ACTIVE
+        <!-- STEP 5: RESULTS & STRATEGIC DASHBOARD -->
+        <section class="step-section hidden animate-in" id="step5">
+            <div class="container">
+                <div class="result-summary-grid">
+                    <!-- Top Summary Card -->
+                    <div class="card result-card wide-card" id="resultCard">
+                        <div class="risk-glow-indicator" id="riskIndicator"></div>
+                        <div class="result-head-info">
+                            <div class="info-node">
+                                <span class="label">Primary Target</span>
+                                <span id="resUser" class="val">--</span>
+                            </div>
+                            <div class="info-node">
+                                <span class="label">Identified Intent</span>
+                                <span id="resIntent" class="val">--</span>
+                            </div>
+                            <div class="info-node">
+                                <span class="label">Confidence Score</span>
+                                <span id="resConfidence" class="val highlight">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="risk-level-display">
+                            <span class="label">Current Threat Level</span>
+                            <h2 id="resRisk" class="risk-text">--</h2>
+                        </div>
+
+                        <div class="intel-brief-grid">
+                            <div class="brief-item">
+                                <h3>🧠 Intelligence Explanation</h3>
+                                <p id="resExplanation">--</p>
+                            </div>
+                            <div class="brief-item">
+                                <h3>📜 Recommended Protocol</h3>
+                                <p id="resSuggestion">--</p>
+                            </div>
+                        </div>
+
+                        <div class="voice-action-center">
+                            <button id="speakBtn" class="voice-btn-large">🔊 Speak Analysis Briefing</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Dashboard Section -->
+                <div class="dashboard-visuals">
+                    <div class="chart-card">
+                        <h3>Strategic Risk Distribution</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Intent Categorization</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="intentChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Attack Frequency Trend</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="timelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="cyber-footer">
+            <div class="status-indicator">
+                <span class="dot pulse"></span> NETWORK STATUS: PROTECTED | ENCRYPTION: 1024-BIT
             </div>
         </footer>
     </div>
