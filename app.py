@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Config
 GMAIL_USER = "senthilsumathi433@gmail.com"
-GMAIL_PASS = "wyowmyulqapmzfie"
+GMAIL_PASS = "kxboexktkwyyduod"
 IMAP_SERVER = "imap.gmail.com"
 IMAP_PORT = 993
 
