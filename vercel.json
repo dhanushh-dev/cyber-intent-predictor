@@ -1,3 +1,8 @@
 {
+  "rewrites": [
+    { "source": "/fetch_emails", "destination": "/api/fetch_emails.py" },
+    { "source": "/predict_intent", "destination": "/api/predict_intent.py" },
+    { "source": "/analytics", "destination": "/api/analytics.py" }
+  ],
   "cleanUrls": true
 }
