@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cyber Threat Analyzer | Professional Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Outfit:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="cyber-theme">
+    <div class="container">
+        <header>
+            <h1 class="glitch-text">AI Cyber Threat <span class="accent">Analyzer</span></h1>
+            <p class="subtitle">Real-time behavior analysis and intent prediction</p>
+        </header>
+
+        <section class="main-layout">
+            <!-- LEFT COLUMN: Control Panel & Intelligence Feed -->
+            <div class="left-col">
+                <div class="card terminal-card">
+                    <button id="fetchEmailsBtn" class="hero-btn">📥 Fetch Security Emails</button>
+                    
+                    <div class="section-divider">
+                        <span>Intelligence Feed</span>
+                    </div>
+                    
+                    <div id="emailList" class="email-list-container scroll-style">
+                        <p class="placeholder-small">Click "Fetch" to load security alerts...</p>
+                    </div>
+                </div>
+
+                <div class="card form-card">
+                    <h2>⚙️ Manual Configuration</h2>
+                    <div class="vertical-form">
+                        <div class="input-group">
+                            <label>Username / Session ID</label>
+                            <input type="text" id="username" placeholder="e.g. system_root">
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Login Attempts</label>
+                                <input type="number" id="loginAttempts" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Pages Accessed</label>
+                                <input type="number" id="pagesAccessed" value="0">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Suspicious Actions</label>
+                            <textarea id="actions" placeholder="System logs, network packets, filtered keywords..."></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Time of Activity</label>
+                            <select id="timeOfDay">
+                                <option value="Day">Standard Ops (Day)</option>
+                                <option value="Night">Unusual Hours (Night)</option>
+                                <option value="Early Morning">Early Warning (Dawn)</option>
+                            </select>
+                        </div>
+                        <button id="analyzeBtn" class="primary-btn">🔍 Run Threat Analysis</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Real-time Analysis & Insights -->
+            <div class="right-col" id="analysisTarget">
+                <div class="card result-card" id="resultCard">
+                    <div id="loader" class="hidden">
+                        <div class="cyber-loader">
+                            <div class="ring"></div>
+                            <span>ANALYZING...</span>
+                        </div>
+                    </div>
+
+                    <div id="placeholderText">
+                        <div class="security-shield">🛡️</div>
+                        <p>Awaiting Intelligence Data...</p>
+                    </div>
+
+                    <div id="resultContent" class="hidden animate-in">
+                        <div class="risk-indicator" id="riskIndicator"></div>
+                        <div class="res-header">
+                            <div class="node">
+                                <span class="label">Target Node</span>
+                                <span id="resUser" class="value">--</span>
+                            </div>
+                            <div class="node">
+                                <span class="label">Detected Intent</span>
+                                <span id="resIntent" class="value">--</span>
+                            </div>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <span class="label">🔥 Threat Level</span>
+                                <span id="resRisk" class="level-badge">--</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label">📊 AI Confidence</span>
+                                <span id="resConfidence" class="value-large">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="intelligence-box">
+                            <h3>🧠 Intelligence Explanation</h3>
+                            <p id="resExplanation">--</p>
+                        </div>
+
+                        <div class="protocol-box">
+                            <h3>📜 Suggested Protocol</h3>
+                            <p id="resSuggestion">--</p>
+                        </div>
+
+                        <div class="actions-row">
+                            <button id="speakBtn" class="voice-btn">🔊 Listen to Intel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD: Global Analytics -->
+        <section class="dashboard-area card">
+            <h2>📊 Strategic Analytics Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="chart-box">
+                    <h3>Risk Distribution</h3>
+                    <canvas id="riskChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Threat Categories</h3>
+                    <canvas id="intentChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Attack Frequency</h3>
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-status">
+                <span class="status-dot online"></span> SYSTEM STATUS: ONLINE | ENCRYPTION: ACTIVE
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
