@@ -1,0 +1,20 @@
+[
+    {
+        "timestamp": "2026-04-17T19:48:47",
+        "log": "Failed login attempt from ip 192.168.1.50",
+        "intent": "Brute Force",
+        "confidence": 0.88
+    },
+    {
+        "timestamp": "2026-04-17T19:50:12",
+        "log": "Database query: SELECT * FROM users WHERE id = 'admin' OR '1'='1'",
+        "intent": "SQL Injection",
+        "confidence": 0.94
+    },
+    {
+        "timestamp": "2026-04-17T19:55:00",
+        "log": "Normal HTTP GET request to /index.html",
+        "intent": "Harmless",
+        "confidence": 0.99
+    }
+]
