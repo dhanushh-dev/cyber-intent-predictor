@@ -1,21 +1,32 @@
 {
-  "functions": {
-    "api/*.py": {
-      "runtime": "python3.12"
-    }
-  },
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/fetch_emails",
-      "destination": "/api/fetch_emails"
+      "src": "api/*.py",
+      "use": "@vercel/python"
     },
     {
-      "source": "/predict_intent",
-      "destination": "/api/predict_intent"
+      "src": "index.html",
+      "use": "@vercel/static"
     },
     {
-      "source": "/analytics",
-      "destination": "/api/analytics"
+      "src": "static/**",
+      "use": "@vercel/static"
     }
+  ],
+  "routes": [
+    {
+      "src": "/fetch_emails",
+      "dest": "/api/fetch_emails.py"
+    },
+    {
+      "src": "/predict_intent",
+      "dest": "/api/predict_intent.py"
+    },
+    {
+      "src": "/analytics",
+      "dest": "/api/analytics.py"
+    },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
