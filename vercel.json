@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "api/*.py": {
+      "runtime": "python3.12"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/fetch_emails",
+      "destination": "/api/fetch_emails"
+    },
+    {
+      "source": "/predict_intent",
+      "destination": "/api/predict_intent"
+    },
+    {
+      "source": "/analytics",
+      "destination": "/api/analytics"
+    }
+  ]
+}
