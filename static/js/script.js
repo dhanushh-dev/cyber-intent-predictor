@@ -32,25 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialization
     initDashboard();
-    fetchNetworkInfo();
-
-    async function fetchNetworkInfo() {
-        try {
-            const res = await fetch('/network_info');
-            const data = await res.json();
-            document.getElementById('networkLink').innerText = data.network;
-            
-            document.getElementById('copyLinkBtn').addEventListener('click', () => {
-                navigator.clipboard.writeText(data.network);
-                const btn = document.getElementById('copyLinkBtn');
-                btn.innerText = 'Copied!';
-                setTimeout(() => btn.innerText = 'Copy Link', 2000);
-            });
-        } catch (e) {
-            document.getElementById('networkLink').innerText = 'Local Only';
-            if (document.getElementById('copyLinkBtn')) document.getElementById('copyLinkBtn').style.display = 'none';
-        }
-    }
 
     // STEP 1 -> STEP 2: Fetch and Show Emails
     fetchEmailsBtn.addEventListener('click', async () => {
