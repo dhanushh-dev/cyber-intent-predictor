@@ -1,18 +1,25 @@
 import imaplib
+import os
 
-GMAIL_USER = "senthilsumathi433@gmail.com"
-GMAIL_PASS = "kxboexktkwyyduod"
-IMAP_SERVER = "imap.gmail.com"
+GMAIL_USER = os.environ.get("GMAIL_USER", "")
+GMAIL_PASS = "".join(os.environ.get("GMAIL_PASS", "").split())
+IMAP_SERVER = os.environ.get("IMAP_SERVER", "imap.gmail.com")
+IMAP_PORT = int(os.environ.get("IMAP_PORT", "993"))
+IMAP_TIMEOUT = float(os.environ.get("IMAP_TIMEOUT", "12"))
+
+if not GMAIL_USER or not GMAIL_PASS:
+    raise SystemExit("Set GMAIL_USER and GMAIL_PASS before running this script.")
 
 try:
     print("Connecting to IMAP...")
-    mail = imaplib.IMAP4_SSL(IMAP_SERVER, 993)
+    mail = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT, timeout=IMAP_TIMEOUT)
     print("Attempting Login...")
     mail.login(GMAIL_USER, GMAIL_PASS)
     print("SUCCESS: Login achieved!")
-    mail.select("inbox")
-    status, messages = mail.search(None, 'ALL')
-    print(f"Inbox status: {status}, Total emails found: {len(messages[0].split())}")
+    mail.select("inbox", readonly=True)
+    status, messages = mail.search(None, "ALL")
+    total = len(messages[0].split()) if messages and messages[0] else 0
+    print(f"Inbox status: {status}, Total emails found: {total}")
     mail.logout()
-except Exception as e:
-    print(f"FAILED: {e}")
+except Exception as exc:
+    print(f"FAILED: {exc.__class__.__name__}: {exc}")

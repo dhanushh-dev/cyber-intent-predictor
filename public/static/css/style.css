@@ -44,7 +44,7 @@ body {
 .hidden { display: none; opacity: 0; }
 .collapsed { height: 0; overflow: hidden; opacity: 0; margin-bottom: 0; padding: 0; }
 .expanded { height: auto; opacity: 1; margin-bottom: 80px; padding: 20px 0; }
-.center-aligned { display: flex; justify-content: center; }
+.center-aligned { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
 
 /* STEP 1: HERO FETCH */
 .hero-fetch-btn {
@@ -64,6 +64,37 @@ body {
 }
 
 .hero-fetch-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6); }
+.hero-fetch-btn:disabled { cursor: wait; opacity: 0.85; transform: none; animation: none; }
+
+.intel-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: min(680px, 100%);
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(13, 18, 29, 0.9);
+    text-align: left;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.intel-status[hidden] { display: none; }
+.intel-status.compact { width: 100%; margin-top: 4px; }
+.intel-status-dot { width: 10px; height: 10px; margin-top: 6px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+.intel-status-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.intel-status-text { font-family: 'Roboto Mono', monospace; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+.intel-status-detail { color: var(--muted); font-size: 0.8rem; line-height: 1.45; overflow-wrap: anywhere; }
+
+.intel-status[data-state="loading"] { border-color: rgba(0, 242, 254, 0.35); background: rgba(0, 242, 254, 0.05); }
+.intel-status[data-state="loading"] .intel-status-dot { background: var(--accent); animation: pulse-anim 1.4s infinite; }
+.intel-status[data-state="success"] { border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.05); }
+.intel-status[data-state="success"] .intel-status-dot { background: var(--success); }
+.intel-status[data-state="warning"] { border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.05); }
+.intel-status[data-state="warning"] .intel-status-dot { background: var(--warning); }
+.intel-status[data-state="error"] { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.06); }
+.intel-status[data-state="error"] .intel-status-dot { background: var(--danger); }
+.intel-status[data-state="error"] .intel-status-text { color: #fecaca; }
 
 @keyframes glow-pulse {
     0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
@@ -142,6 +173,7 @@ textarea { height: 120px; resize: none; }
 }
 
 .analyze-trigger-btn:hover { background: var(--primary); color: white; box-shadow: var(--glow-blue); }
+.analyze-trigger-btn:disabled { cursor: wait; opacity: 0.6; transform: none; }
 
 /* STEP 4: ANALYSIS EXPERIENCE */
 .analysis-experience { text-align: center; padding: 60px 0; }
